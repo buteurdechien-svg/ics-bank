@@ -91,27 +91,4 @@ foreach ($history as $h) {
     $txStmt->execute([$ref, $walletId[$src], $walletId[$dst], $amount, $fee, 'transfer', $label, $date]);
 }
 
-echo "Enregistrement de la grille des défis (réservée formateur)...\n";
-$chStmt = $pdo->prepare(
-    'INSERT INTO lab_challenges (id, title, severity, category, location) VALUES (?,?,?,?,?)'
-);
-$challenges = [
-    [1,'Divulgation d\'informations','Low','Recon','Page de diagnostic / erreurs API'],
-    [2,'Ressource de test exposée','Low','Recon','Export CSV accessible sans auth'],
-    [3,'Énumération de comptes','Low','Auth','Connexion / mot de passe oublié'],
-    [4,'Contrôle d\'accès fonctionnel manquant','Medium','Access','Fonction cash-in agent'],
-    [5,'IDOR / BOLA portefeuille','High','Access','API /api/v1/wallets/{id}'],
-    [6,'Injection SQL','High','Injection','Filtre historique des opérations'],
-    [7,'XSS stocké','High','Injection','Réclamation affichée côté support'],
-    [8,'Contournement logique du transfert','High','Business','Frais client / montant négatif'],
-    [9,'CSRF','Medium','Session','Ajout de bénéficiaire'],
-    [10,'Gestion de session faible','High','Session','Session non régénérée / logout'],
-    [11,'Intégrité du solde (race condition)','Critical','Business','Transfert concurrent'],
-    [12,'Mass assignment','High','Access','PATCH profil via API'],
-    [13,'SSRF vers service isolé','Critical','SSRF','Aperçu marchand'],
-    [14,'Élévation de privilèges','Critical','Access','Support vers admin'],
-    [15,'Chaînage multi-failles','Critical','Chain','Mission finale'],
-];
-foreach ($challenges as $c) { $chStmt->execute($c); }
-
 echo "Terminé. Comptes de démonstration prêts.\n";

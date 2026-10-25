@@ -5,3 +5,4 @@
 !/storage/**/.gitkeep
 /vendor/
 *.log
+docs/GRILLE_CORRECTION.md

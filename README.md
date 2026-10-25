@@ -9,8 +9,8 @@ failles, crée son compte, explore les services, et documente les
 vulnérabilités dans un **rapport d'audit** — comme sur une vraie mission.
 
 Il n'y a **ni score, ni flags, ni liste de défis** affichés sur le site. Le
-livrable est le rapport. La correction se fait avec la grille réservée au
-formateur (`docs/GRILLE_CORRECTION.md`).
+livrable est le rapport. La grille de correction est fournie séparément au
+formateur (elle ne figure pas dans ce dépôt public).
 
 ---
 
@@ -93,7 +93,7 @@ config/           Configuration
 database/         schema.sql + seed.php (comptes de démonstration)
 scripts/          install.sh, reset-lab.sh, services SSRF et Mailpit
 storage/          Pièces jointes, journaux, exports (hors de public/)
-docs/             Grille de correction, lettre de mission, modèle de rapport
+docs/             Lettre de mission, modèle de rapport
 ```
 
 ## Avertissement

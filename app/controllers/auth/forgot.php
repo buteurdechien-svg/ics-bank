@@ -13,8 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $st->execute([$login]);
         $u = $st->fetch();
 
-        // [LAB · Défi 03 — énumération de comptes]
-        // La réponse diffère selon l'existence du compte (confirme un identifiant valide).
         if (!$u) {
             $errors[] = "Cet identifiant n'est associé à aucun compte.";
         } else {

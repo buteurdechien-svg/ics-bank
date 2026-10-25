@@ -7,10 +7,6 @@ $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? 'add';
 
-    // [LAB · Défi 09 — CSRF]
-    // L'ajout de bénéficiaire ne vérifie PAS le jeton CSRF côté serveur
-    // (le champ existe dans le formulaire mais n'est pas contrôlé ici),
-    // ce qui permet à une page tierce de forcer l'ajout.
     if ($action === 'add') {
         $dst  = trim($_POST['dst_account'] ?? '');
         $nick = trim($_POST['nickname'] ?? '');

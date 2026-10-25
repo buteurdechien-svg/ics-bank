@@ -15,11 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? 'pay';
 
     if ($action === 'preview') {
-        // [LAB · Défi 13 — SSRF]
-        // La prévisualisation récupère une URL fournie par l'utilisateur côté
-        // serveur, sans liste blanche. En laboratoire, le réseau ne permet
-        // d'atteindre qu'un service de démonstration interne (jamais l'hôte,
-        // les métadonnées cloud ni Internet).
         $url = trim($_POST['preview_url'] ?? '');
         if ($url !== '') {
             $ctx = stream_context_create(['http' => ['timeout' => 3]]);

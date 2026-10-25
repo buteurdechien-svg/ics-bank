@@ -1,8 +1,6 @@
 <?php
 /**
  * ICS Bank — fonctions utilitaires communes.
- * Le parcours NORMAL est sécurisé ; les failles pédagogiques sont
- * introduites ponctuellement dans les contrôleurs concernés.
  */
 declare(strict_types=1);
 

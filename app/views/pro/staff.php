@@ -56,7 +56,6 @@
             <strong><?= e($c['subject']) ?></strong>
             <span class="badge badge-role" style="float:right"><?= e($c['status']) ?></span>
             <div class="muted" style="font-size:.82rem">De <?= e($c['full_name']) ?> (<?= e($c['login']) ?>) · <?= e(date('d/m/Y H:i', strtotime($c['created_at']))) ?></div>
-            <!-- [LAB · Défi 07] Rendu du contenu client SANS échappement -->
             <div style="margin-top:8px"><?= $c['body'] ?></div>
             <form method="post" action="/staff" style="margin-top:8px">
               <input type="hidden" name="action" value="answer">

@@ -13,8 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (mb_strlen($body) < 5)    { $errors[] = "Décrivez votre réclamation."; }
 
     if (!$errors) {
-        // Le contenu est stocké tel quel (brut). L'affichage côté client est
-        // échappé ; l'affichage côté support ne l'est pas -> XSS stocké (défi 07).
         $pdo->prepare('INSERT INTO complaints (owner_id, subject, body) VALUES (?,?,?)')
             ->execute([$u['id'], $subject, $body]);
         $cid = (int)$pdo->lastInsertId();

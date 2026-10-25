@@ -15,9 +15,6 @@ $dbError = null;
 
 try {
     if ($q !== '') {
-        // [LAB · Défi 06 — injection SQL]
-        // Le terme de recherche est concaténé directement dans la requête
-        // (le reste de l'application utilise des requêtes préparées).
         $sql = "SELECT t.*, ws.account_no AS src_acc, wd.account_no AS dst_acc
                 FROM transactions t
                 LEFT JOIN wallets ws ON ws.id = t.src_wallet
@@ -39,8 +36,6 @@ try {
         $rows = $st->fetchAll();
     }
 } catch (Throwable $ex) {
-    // [LAB · Défi 01 — divulgation d'informations]
-    // Le message d'erreur SQL brut est renvoyé à l'utilisateur.
     $dbError = $ex->getMessage();
 }
 

@@ -1,9 +1,6 @@
 <?php
 /**
- * Page de diagnostic — laissée en place par erreur.
- * [LAB · Défi 01 — divulgation d'informations]
- * Accessible sans authentification, elle révèle des détails techniques
- * inutiles (versions, chemins, configuration, DSN de base).
+ * Page de diagnostic interne.
  */
 header('Content-Type: text/plain; charset=utf-8');
 $cfg = config();

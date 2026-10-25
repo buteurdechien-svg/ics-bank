@@ -1,8 +1,7 @@
 <?php
 /**
  * ICS Bank — API REST /api/v1/.
- * Utilisée par l'interface « mobile web ». Certaines routes portent des
- * failles pédagogiques isolées (IDOR, mass assignment).
+ * Utilisée par l'interface « mobile web ».
  */
 declare(strict_types=1);
 
@@ -80,9 +79,6 @@ if (preg_match('#^/api/v1/wallets/(\d+)$#', $uri, $m) && $method === 'GET') {
     $u = api_user();
     if (!$u) json_out(['error' => 'unauthenticated'], 401);
 
-    // [LAB · Défi 05 — IDOR / BOLA]
-    // On renvoie le portefeuille demandé par son id SANS vérifier qu'il
-    // appartient à l'utilisateur authentifié.
     $st = $pdo->prepare(
         'SELECT w.id, w.account_no, w.balance, w.currency, u.full_name, u.login
          FROM wallets w JOIN users u ON u.id = w.user_id WHERE w.id = ?'
@@ -97,7 +93,6 @@ if (preg_match('#^/api/v1/wallets/(\d+)$#', $uri, $m) && $method === 'GET') {
 if (preg_match('#^/api/v1/wallets/(\d+)/transactions$#', $uri, $m) && $method === 'GET') {
     $u = api_user();
     if (!$u) json_out(['error' => 'unauthenticated'], 401);
-    // Même absence de contrôle de propriété (prolonge le défi 05).
     $st = $pdo->prepare(
         'SELECT reference, src_wallet, dst_wallet, amount, fee, type, label, created_at
          FROM transactions WHERE src_wallet = ? OR dst_wallet = ? ORDER BY created_at DESC'
@@ -112,9 +107,6 @@ if ($uri === '/api/v1/profile' && in_array($method, ['PATCH','POST'], true)) {
     if (!$u) json_out(['error' => 'unauthenticated'], 401);
     $b = body_json();
 
-    // [LAB · Défi 12 — mass assignment]
-    // Tous les champs reçus sont appliqués tels quels, y compris des champs
-    // réservés (role, status) que l'utilisateur ne devrait pas pouvoir modifier.
     $allowedEcho = [];
     $cols = [];
     $vals = [];

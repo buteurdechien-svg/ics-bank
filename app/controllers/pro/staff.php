@@ -10,10 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /* ── Agent : dépôt d'espèces sur un compte client (cash-in) ── */
     if ($action === 'cashin') {
-        // [LAB · Défi 04 — contrôle d'accès fonctionnel manquant]
-        // Cette action devrait être réservée au rôle 'agent', mais aucune
-        // vérification de rôle n'est faite : tout utilisateur connecté peut
-        // créditer un compte.
         $acc    = trim($_POST['account_no'] ?? '');
         $amount = (int)($_POST['amount'] ?? 0);
         if ($amount <= 0) {
@@ -45,10 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /* ── Changement de rôle d'un utilisateur ── */
     elseif ($action === 'setrole') {
-        // [LAB · Défi 14 — élévation de privilèges]
-        // Action d'administration (changer le rôle d'un compte) accessible sans
-        // vérifier que l'acteur est 'admin' : un compte 'support' peut l'invoquer
-        // et se promouvoir, ou promouvoir un complice.
         $uid  = (int)($_POST['user_id'] ?? 0);
         $role = $_POST['role'] ?? 'client';
         if (in_array($role, ['client','agent','merchant','support','admin'], true)) {
@@ -71,7 +63,6 @@ $data = ['title' => 'Espace ' . $u['role'], 'nav' => 'staff', 'user' => $u,
          'errors' => $errors, 'notice' => $notice];
 
 if ($u['role'] === 'support' || $u['role'] === 'admin') {
-    // Réclamations (affichées côté support SANS échappement -> XSS stocké défi 07)
     $data['complaints'] = $pdo->query(
         'SELECT c.*, u.full_name, u.login FROM complaints c JOIN users u ON u.id = c.owner_id ORDER BY c.created_at DESC'
     )->fetchAll();

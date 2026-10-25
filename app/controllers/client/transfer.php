@@ -17,10 +17,6 @@ $receipt = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dstAccount = trim($_POST['dst_account'] ?? '');
     $amount     = (int)($_POST['amount'] ?? 0);
-    // [LAB · Défi 08 — contournement logique du transfert]
-    // Les frais sont transmis par le navigateur et acceptés tels quels par
-    // le serveur, au lieu d'être recalculés. Combiné à l'absence de contrôle
-    // d'un montant strictement positif, cela permet frais nuls et montant négatif.
     $fee        = (int)($_POST['fee'] ?? 0);
     $label      = trim($_POST['label'] ?? '');
     $pin        = $_POST['secret'] ?? '';
@@ -41,18 +37,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!$errors) {
-        // [LAB · Défi 11 — intégrité du solde / race condition]
-        // Vérification du solde PUIS débit, sans verrou (pas de SELECT ... FOR UPDATE,
-        // pas de contrainte d'invariant). Des requêtes concurrentes passent le test
-        // en même temps et dépensent plusieurs fois le même solde.
-        // Le verrou de session est relâché ici pour que les requêtes concurrentes
-        // d'un même client ne soient pas sérialisées (rend la faille atteignable).
         if (session_status() === PHP_SESSION_ACTIVE) { session_write_close(); }
         $total = $amount + $fee;
         if ((int)$wallet['balance'] < $total) {
             $errors[] = "Solde insuffisant.";
         } else {
-            usleep(150000); // fenêtre de concurrence (rend la race condition reproductible en lab)
+            usleep(150000);
             $ref = new_reference('TX');
             $pdo->prepare('UPDATE wallets SET balance = balance - ? WHERE id = ?')
                 ->execute([$total, $wallet['id']]);
