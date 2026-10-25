@@ -45,6 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Vérification du solde PUIS débit, sans verrou (pas de SELECT ... FOR UPDATE,
         // pas de contrainte d'invariant). Des requêtes concurrentes passent le test
         // en même temps et dépensent plusieurs fois le même solde.
+        // Le verrou de session est relâché ici pour que les requêtes concurrentes
+        // d'un même client ne soient pas sérialisées (rend la faille atteignable).
+        if (session_status() === PHP_SESSION_ACTIVE) { session_write_close(); }
         $total = $amount + $fee;
         if ((int)$wallet['balance'] < $total) {
             $errors[] = "Solde insuffisant.";

@@ -24,6 +24,7 @@ if (str_starts_with($uri, '/api/')) {
 $routes = [
     'GET /'            => 'public/home.php',
     'GET /pricing'     => 'public/pricing.php',
+    'GET /debug'       => 'public/debug.php',
     'GET /register'    => 'auth/register.php',
     'POST /register'   => 'auth/register.php',
     'GET /verify'      => 'auth/verify.php',
