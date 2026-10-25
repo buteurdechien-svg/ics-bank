@@ -47,9 +47,25 @@ if ! command -v mailpit >/dev/null 2>&1; then
 fi
 
 # ─── 3. Fichier .env ──────────────────────────────────────────────────
+# (non consommé au runtime — Apache fournit les variables — mais utile en CLI)
 if [[ ! -f .env ]]; then
   echo "==> Création du fichier .env..."
-  cp .env.example .env
+  if [[ -f .env.example ]]; then
+    cp .env.example .env
+  else
+    cat > .env <<ENV
+APP_NAME="ICS Bank"
+APP_ENV=lab
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_NAME=${DB_NAME}
+DB_USER=${DB_USER}
+DB_PASSWORD=${DB_PASS}
+MAIL_HOST=127.0.0.1
+MAIL_PORT=1025
+MAIL_FROM=no-reply@ics-bank.local
+ENV
+  fi
 fi
 
 # ─── 4. Base de données ───────────────────────────────────────────────
@@ -57,8 +73,10 @@ echo "==> Configuration de MySQL..."
 systemctl enable --now mysql
 mysql <<SQL
 CREATE DATABASE IF NOT EXISTS ${DB_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
+CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost'  IDENTIFIED BY '${DB_PASS}';
+CREATE USER IF NOT EXISTS '${DB_USER}'@'127.0.0.1'  IDENTIFIED BY '${DB_PASS}';
 GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'localhost';
+GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'127.0.0.1';
 FLUSH PRIVILEGES;
 SQL
 
