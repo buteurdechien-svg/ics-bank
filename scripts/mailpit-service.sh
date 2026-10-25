@@ -11,8 +11,9 @@ Description=Mailpit (capture e-mails de test ICS Bank)
 After=network.target
 
 [Service]
-# Interface web liée à localhost ; SMTP écoute en 1025 pour l'application.
-ExecStart=${MAILPIT_BIN} --smtp 127.0.0.1:1025 --listen 127.0.0.1:8025
+# Interface web accessible depuis le réseau isolé du labo (Kali) ;
+# SMTP en 1025 pour l'application locale uniquement.
+ExecStart=${MAILPIT_BIN} --smtp 127.0.0.1:1025 --listen 0.0.0.0:8025
 Restart=always
 User=www-data
 

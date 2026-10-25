@@ -92,6 +92,16 @@ mkdir -p storage/logs storage/attachments storage/exports
 chown -R www-data:www-data storage
 chmod -R 0775 storage
 
+# Rendre le chemin du projet traversable par Apache (www-data).
+# Si le dépôt est dans /home/<user> (mode 0750 par défaut sur Ubuntu),
+# www-data ne peut pas l'atteindre -> 403. On ajoute le bit de traversée
+# sur chaque dossier parent, sans ouvrir la lecture.
+d="$PROJECT_DIR"
+while [[ "$d" != "/" ]]; do
+  chmod o+x "$d" 2>/dev/null || true
+  d="$(dirname "$d")"
+done
+
 # ─── 6. Apache ────────────────────────────────────────────────────────
 echo "==> Configuration d'Apache..."
 cat > /etc/apache2/sites-available/ics-bank.conf <<CONF
