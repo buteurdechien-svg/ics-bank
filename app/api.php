@@ -34,9 +34,12 @@ function api_user(): ?array
 {
     start_session();
     if (empty($_SESSION['uid'])) {
-        // Jeton Bearer accepté également
-        $hdr = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-        if (preg_match('/Bearer\s+(\S+)/', $hdr, $m)) {
+        // Jeton Bearer accepté également (selon la config, l'en-tête arrive
+        // sous différents noms).
+        $hdr = $_SERVER['HTTP_AUTHORIZATION']
+            ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION']
+            ?? (function_exists('apache_request_headers') ? (apache_request_headers()['Authorization'] ?? '') : '');
+        if (preg_match('/Bearer\s+(\S+)/', (string)$hdr, $m)) {
             $st = Database::pdo()->prepare('SELECT * FROM users WHERE SHA1(CONCAT(id, "|", secret_hash)) = ?');
             $st->execute([$m[1]]);
             return $st->fetch() ?: null;
